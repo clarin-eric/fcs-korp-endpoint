@@ -14,7 +14,6 @@ import eu.clarin.sru.server.SRUScanResultSet;
 import eu.clarin.sru.server.SRUExplainResult;
 import eu.clarin.sru.server.SRUServerConfig;
 
-
 /**
  * A result set of an <em>explain</em> operation. A database implementation may
  * use it implement extensions to the SRU protocol, i.e. providing
@@ -33,7 +32,7 @@ public abstract class KorpSRUExplainResult extends SRUExplainResult {
      * Constructor.
      *
      * @param diagnostics
-     *            an instance of a SRUDiagnosticList
+     *                    an instance of a SRUDiagnosticList
      * @see SRUDiagnosticList
      */
     protected KorpSRUExplainResult(SRUDiagnosticList diagnostics) {
