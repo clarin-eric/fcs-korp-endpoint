@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -61,20 +62,28 @@ import se.gu.spraakbanken.fcs.endpoint.korp.data.json.pojo.info.*;
 import se.gu.spraakbanken.fcs.endpoint.korp.data.json.pojo.query.Query;
 
 public class KorpEndpointSearchEngineTest {
-    private String jsonString = "{\"corpora\":{\"PAROLE\":{\"attrs\":{\"a\":[],\"p\":[\"word\",\"pos\",\"msd\",\"lemma\",\"lex\",\"saldo\",\"prefix\",\"suffix\",\"ref\",\"dephead\",\"deprel\"],\"s\":[\"sentence\",\"sentence_id\",\"text\",\"text_id\",\"text_date\",\"text_title\",\"text_publisher\",\"text_datefrom\",\"text_dateto\",\"text_timefrom\",\"text_timeto\"]},\"info\":{\"Charset\":\"utf8\",\"FirstDate\":\"1976-01-01 00:00:00\",\"LastDate\":\"1997-06-16 23:59:59\",\"Saldo\":\"73089\",\"Sentences\":\"1646688\",\"Size\":\"24331936\",\"Updated\":\"2016-03-15\"}},\"ROMI\":{\"attrs\":{\"a\":[],\"p\":[\"word\",\"pos\",\"msd\",\"lemma\",\"lex\",\"saldo\",\"prefix\",\"suffix\",\"ref\",\"dephead\",\"deprel\"],\"s\":[\"sentence\",\"sentence_id\",\"text\",\"text_title\",\"text_datefrom\",\"text_dateto\",\"text_timefrom\",\"text_timeto\",\"paragraph\",\"paragraph_n\",\"text_author\",\"text_year\"]},\"info\":{\"Charset\":\"utf8\",\"FirstDate\":\"1976-01-01 00:00:00\",\"LastDate\":\"1977-12-31 23:59:59\",\"Saldo\":\"73089\",\"Sentences\":\"499030\",\"Size\":\"6579220\",\"Updated\":\"2015-12-18\"}}},\"time\":4.41E-4,\"total_sentences\":2145718,\"total_size\":30911156}";
+    private final static String ENDPOINT_DESCRIPTION_PATH = "target/test-classes/se/gu/spraakbanken/fcs/endpoint/korp/korp-endpoint-description-test.xml";
+    private final static String SRU_SERVER_CONFIG_PATH = "src/main/webapp/WEB-INF/sru-server-config.xml";
+
+    private static Map<String, String> params = Collections.unmodifiableMap(new HashMap<String, String>() {
+        {
+            put(SRUServerConfig.SRU_TRANSPORT, "http");
+            put(SRUServerConfig.SRU_HOST, "127.0.0.1");
+            put(SRUServerConfig.SRU_PORT, "8082");
+            put(SRUServerConfig.SRU_DATABASE, "sru-server");
+            put(SRUServerServlet.SRU_SERVER_CONFIG_LOCATION_PARAM, SRU_SERVER_CONFIG_PATH);
+        }
+    });
     private static SRUServerConfig config;
     private static EndpointDescription sed;
-    private static KorpEndpointSearchEngine kese;
+
     private static ServletTester tester;
     private static ServletHolder holder;
-    private static HashMap<String, String> params;
 
     @BeforeClass
-    public static void parseEndpointDescription() throws SRUConfigException {
+    public static void parseEndpointDescription() throws SRUConfigException, ServletException {
         try {
-            sed = SimpleEndpointDescriptionParser.parse(new File(
-                    "target/test-classes/se/gu/spraakbanken/fcs/endpoint/korp/korp-endpoint-description-test.xml")
-                    .toURI().toURL());
+            sed = SimpleEndpointDescriptionParser.parse(new File(ENDPOINT_DESCRIPTION_PATH).toURI().toURL());
             assertEquals("http://clarin.eu/fcs/capability/basic-search", sed.getCapabilities().get(0).toString());
             assertEquals("http://clarin.eu/fcs/capability/advanced-search", sed.getCapabilities().get(1).toString());
         } catch (MalformedURLException mue) {
@@ -87,12 +96,21 @@ public class KorpEndpointSearchEngineTest {
         tester.setResourceBase("src/main/webapp");
         tester.setClassLoader(SRUServerServlet.class.getClassLoader());
         holder = tester.addServlet(SRUServerServlet.class, "/sru");
-        params = new HashMap<String, String>();
-        params.put(SRUServerConfig.SRU_TRANSPORT, "http");
-        params.put(SRUServerConfig.SRU_HOST, "127.0.0.1");
-        params.put(SRUServerConfig.SRU_PORT, "8082");
-        params.put(SRUServerConfig.SRU_DATABASE, "sru-server");
-        params.put(SRUServerServlet.SRU_SERVER_CONFIG_LOCATION_PARAM, "src/main/webapp/WEB-INF/sru-server-config.xml");
+
+        URL url;
+        try {
+            // SRUServerServlet.class.getClassLoader().getResource("META-INF/sru-server-config.xml");
+            url = new File(SRU_SERVER_CONFIG_PATH).toURI().toURL();
+        } catch (MalformedURLException mue) {
+            throw new SRUConfigException("Malformed URL");
+        }
+        if (url == null) {
+            throw new ServletException("not found, url == null");
+        }
+        // other runtime configuration, usually obtained from Servlet context
+        config = SRUServerConfig.parse(params, url);
+        System.out.println("config.getBaseUrl(): " + config.getBaseUrl());
+        System.out.println("config.getDatabase(): " + config.getDatabase());
 
         // try {
         // String baseUrl = tester.createSocketConnector(true);
@@ -103,12 +121,11 @@ public class KorpEndpointSearchEngineTest {
         // }
         try {
             // tester.setAttribute(SRUServerServlet.SRU_SERVER_CONFIG_LOCATION_PARAM,
-            // "src/main/webapp/WEB-INF/sru-server-config.xml");
+            // SRU_SERVER_CONFIG_PATH);
             System.out.println(
-                    "tester.getAttribute():" + tester.getAttribute(SRUServerServlet.SRU_SERVER_CONFIG_LOCATION_PARAM));
+                    "tester.getAttribute(): " + tester.getAttribute(SRUServerServlet.SRU_SERVER_CONFIG_LOCATION_PARAM));
             // System.out.println(holder.getServlet().getServletConfig().getInitParameter(SRUServerServlet.SRU_SERVER_CONFIG_LOCATION_PARAM));
             tester.start();
-
         } catch (Exception e) {
             throw new SRUConfigException("Failed to start servlet.");
         }
@@ -116,26 +133,7 @@ public class KorpEndpointSearchEngineTest {
 
     @Test
     public void doInit() throws SRUConfigException, ServletException {
-        URL url;
-        try {
-            url = // SRUServerServlet.class.getClassLoader().getResource("META-INF/sru-server-config.xml");
-                    new File("src/main/webapp/WEB-INF/sru-server-config.xml").toURI().toURL();
-
-        } catch (MalformedURLException mue) {
-            throw new SRUConfigException("Malformed URL");
-        }
-        if (url == null) {
-            throw new ServletException("not found, url == null");
-        }
-        // other runtime configuration, usually obtained from Servlet context
-
-        config = SRUServerConfig.parse(params, url);
-        kese = new KorpEndpointSearchEngine();
-        System.out.println(config.getBaseUrl());
-        System.out.println(config.getDatabase());
-
-        // System.out.println(holder.getServlet().getServletInfo());
-
+        KorpEndpointSearchEngine kese = new KorpEndpointSearchEngine();
         kese.doInit(config, new SRUQueryParserRegistry.Builder().register(new FCSQueryParser()), params);
 
         assertNotNull(kese.getCorporaInfo());
@@ -151,7 +149,7 @@ public class KorpEndpointSearchEngineTest {
 
     @Test
     public void getDataViewsFromDescription() throws SRUConfigException {
-        System.out.println(sed.getSupportedDataViews());
+        System.out.println("sed.getSupportedDataViews(): " + sed.getSupportedDataViews());
         assertEquals("hits", sed.getSupportedDataViews().get(0).getIdentifier());
         assertEquals("SEND_BY_DEFAULT", sed.getSupportedDataViews().get(0).getDeliveryPolicy().toString());
         assertEquals("application/x-clarin-fcs-adv+xml", sed.getSupportedDataViews().get(1).getMimeType());
@@ -161,7 +159,7 @@ public class KorpEndpointSearchEngineTest {
 
     @Test
     public void getLayersFromDescription() throws SRUConfigException {
-        System.out.println(sed.getSupportedLayers());
+        System.out.println("sed.getSupportedLayers(): " + sed.getSupportedLayers());
         assertEquals("http://spraakbanken.gu.se/ns/fcs/layer/word",
                 sed.getSupportedLayers().get(0).getResultId().toString());
         assertEquals("lemma", sed.getSupportedLayers().get(1).getType().toString());
@@ -170,7 +168,7 @@ public class KorpEndpointSearchEngineTest {
     @Test
     public void getResourcesFromDescription() throws SRUException {
         List<ResourceInfo> riList = sed.getResourceList("hdl:10794/sbmoderna");
-        System.out.println(riList.get(0).getTitle());
+        System.out.println("Resource(0).Title: " + riList.get(0).getTitle());
         assertEquals("hits", riList.get(0).getAvailableDataViews().get(0).getIdentifier());
         assertEquals("SEND_BY_DEFAULT", riList.get(0).getAvailableDataViews().get(0).getDeliveryPolicy().toString());
         assertEquals("application/x-clarin-fcs-hits+xml", riList.get(0).getAvailableDataViews().get(0).getMimeType());
@@ -330,6 +328,7 @@ public class KorpEndpointSearchEngineTest {
 
     @Test
     public void search1() throws SRUException, SRUConfigException, XMLStreamException {
+        KorpEndpointSearchEngine kese = new KorpEndpointSearchEngine();
         SRUDiagnosticList diagnostics = new Diagnostic();
         kese.doInit(config, new SRUQueryParserRegistry.Builder().register(new FCSQueryParser()), params);
         // SRURequest request = new SRURequestImpl(config, queryParsers, new
@@ -352,10 +351,11 @@ public class KorpEndpointSearchEngineTest {
                 System.out.println("search1: " + sw.toString());
             }
             xmlStreamWriter.flush();
-            xmlStreamWriter.close();
-        } catch (Exception ex) {
-            // TODO: throwing an error that blocks compilation, unsure how to proceed
-            // xmlStreamWriter.close();
+        } finally {
+            try {
+                xmlStreamWriter.close();
+            } catch (Exception ex2) {
+            }
         }
 
         System.out.println("getHits: " + queryRes.getHits());
