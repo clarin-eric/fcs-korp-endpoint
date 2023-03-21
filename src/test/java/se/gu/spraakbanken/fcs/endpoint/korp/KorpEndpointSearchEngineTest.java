@@ -337,7 +337,8 @@ public class KorpEndpointSearchEngineTest {
 	    xmlStreamWriter.flush();
 	    xmlStreamWriter.close();
 	} catch (Exception ex) {
-	    xmlStreamWriter.close();
+		// TODO: throwing an error that blocks compilation, unsure how to proceed
+	    //xmlStreamWriter.close();
 	}
 
 	System.out.println("getHits: " + queryRes.getHits());

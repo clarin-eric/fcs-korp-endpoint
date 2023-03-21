@@ -41,6 +41,7 @@ import eu.clarin.sru.server.SRUQueryParserRegistry;
 import eu.clarin.sru.server.SRURequest;
 import eu.clarin.sru.server.SRUScanResultSet;
 import eu.clarin.sru.server.SRUSearchResultSet;
+import eu.clarin.sru.server.SRUServer;
 import eu.clarin.sru.server.SRUServerConfig;
 import eu.clarin.sru.server.fcs.Constants;
 import eu.clarin.sru.server.fcs.DataView;

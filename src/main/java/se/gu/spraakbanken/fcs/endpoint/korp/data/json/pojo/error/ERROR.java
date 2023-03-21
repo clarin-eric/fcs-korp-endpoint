@@ -1,4 +1,4 @@
-package se.gu.spraakbanken.fcs.endpoint.korp.data.json.pojo;
+package se.gu.spraakbanken.fcs.endpoint.korp.data.json.pojo.error;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,56 +13,56 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-	"ERROR",
-	"time"
+"type",
+"value"
 })
 
-public class Error {
-    @JsonProperty("ERROR")
-    private se.gu.spraakbanken.fcs.endpoint.korp.data.json.pojo.error.ERROR ERROR;
-    @JsonProperty("time")
-    private Double time;
+public class ERROR {
+    @JsonProperty("type")
+    private String type;
+    @JsonProperty("value")
+    private String value;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      *
      * @return
-     * The ERROR
+     * The type
      */
-    @JsonProperty("ERROR")
-    public se.gu.spraakbanken.fcs.endpoint.korp.data.json.pojo.error.ERROR getERROR() {
-	return ERROR;
+    @JsonProperty("type")
+    public String getType() {
+	return type;
     }
 
     /**
      *
-     * @param ERROR
-     * The ERROR
+     * @param type
+     * The type
      */
-    @JsonProperty("ERROR")
-    public void setERROR(se.gu.spraakbanken.fcs.endpoint.korp.data.json.pojo.error.ERROR ERROR) {
-	this.ERROR = ERROR;
+    @JsonProperty("type")
+    public void setType(String type) {
+	this.type = type;
     }
 
     /**
      *
      * @return
-     * The time
+     * The value
      */
-    @JsonProperty("time")
-    public Double getTime() {
-	return time;
+    @JsonProperty("value")
+    public String getValue() {
+	return value;
     }
 
     /**
      *
-     * @param time
-     * The time
+     * @param value
+     * The value
      */
-    @JsonProperty("time")
-    public void setTime(Double time) {
-	this.time = time;
+    @JsonProperty("value")
+    public void setValue(String value) {
+	this.value = value;
     }
 
     @JsonAnyGetter
@@ -74,5 +74,4 @@ public class Error {
     public void setAdditionalProperty(String name, Object value) {
 	this.additionalProperties.put(name, value);
     }
-
 }
