@@ -30,7 +30,8 @@ import eu.clarin.sru.server.SRUScanResultSet;
  * This class needs to be implemented for the target search engine.
  * </p>
  *
- * @see <a href="https://www.loc.gov/standards/sru/companionSpecs/scan.html"> SRU Scan
+ * @see <a href="https://www.loc.gov/standards/sru/companionSpecs/scan.html">
+ *      SRU Scan
  *      Operation</a>
  */
 public class KorpSRUScanResultSet extends SRUScanResultSet {
@@ -38,14 +39,12 @@ public class KorpSRUScanResultSet extends SRUScanResultSet {
     /**
      * Constructor.
      *
-     * @param diagnostics
-     *            an instance of a SRUDiagnosticList.
+     * @param diagnostics an instance of a SRUDiagnosticList.
      * @see SRUDiagnosticList
      */
     protected KorpSRUScanResultSet(SRUDiagnosticList diagnostics) {
         super(diagnostics);
     }
-
 
     /**
      * Moves the cursor forward one term from its current position. A result set
@@ -59,13 +58,11 @@ public class KorpSRUScanResultSet extends SRUScanResultSet {
      *
      * @return <code>true</code> if the new current term is valid;
      *         <code>false</code> if there are no more terms
-     * @throws SRUException
-     *             if an error occurred while fetching the next term
+     * @throws SRUException if an error occurred while fetching the next term
      */
     public boolean nextTerm() throws SRUException {
-	return false;
+        return false;
     }
-
 
     /**
      * Get the current term exactly as it appears in the index.
@@ -73,22 +70,20 @@ public class KorpSRUScanResultSet extends SRUScanResultSet {
      * @return current term
      */
     public String getValue() {
-	return new String("NOVALUETERM");
+        return new String("NOVALUETERM");
     }
-
 
     /**
      * Get the number of records for the current term which would be matched if
      * the index in the request's <em>scanClause</em> was searched with the term
      * in the <em>value</em> field.
      *
-     * @return a non-negative number of records or
-     *         <code>-1</code>, if the number is unknown.
+     * @return a non-negative number of records or <code>-1</code>, if the number is
+     *         unknown.
      */
     public int getNumberOfRecords() {
-	return -1;
+        return -1;
     }
-
 
     /**
      * Get the string for the current term to display to the end user in place
@@ -97,9 +92,8 @@ public class KorpSRUScanResultSet extends SRUScanResultSet {
      * @return display string or <code>null</code>
      */
     public String getDisplayTerm() {
-	return new String("NODISPLAYTERM");
+        return new String("NODISPLAYTERM");
     }
-
 
     /**
      * Get the flag to indicate the position of the term within the complete
@@ -109,9 +103,8 @@ public class KorpSRUScanResultSet extends SRUScanResultSet {
      */
     @Override
     public WhereInList getWhereInList() {
-	return null;
+        return null;
     }
-
 
     /**
      * Check, if extra term data should be serialized for the current term. A
@@ -119,25 +112,22 @@ public class KorpSRUScanResultSet extends SRUScanResultSet {
      * <code>false</code>.
      *
      * @return <code>true</code> if the term has extra term data
-     * @throws NoSuchElementException
-     *             term set is already advanced past all past terms
+     * @throws NoSuchElementException term set is already advanced past all past
+     *                                terms
      * @see #writeExtraTermData(XMLStreamWriter)
      */
     public boolean hasExtraTermData() {
         return false;
     }
 
-
     /**
      * Serialize extra term data for the current term. A no-op default
      * implementation is provided for convince.
      *
-     * @param writer
-     *            the {@link XMLStreamException} instance to be used
-     * @throws XMLStreamException
-     *             an error occurred while serializing the term extra data
-     * @throws NoSuchElementException
-     *             result set already advanced past all terms
+     * @param writer the {@link XMLStreamException} instance to be used
+     * @throws XMLStreamException     an error occurred while serializing the term
+     *                                extra data
+     * @throws NoSuchElementException result set already advanced past all terms
      * @see #hasExtraTermData()
      */
     public void writeExtraTermData(XMLStreamWriter writer)

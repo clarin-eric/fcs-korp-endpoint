@@ -68,7 +68,7 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
     private int currentPageMaxRecords = 100;
     private int startRecord = 1;
     private int maximumRecords = 1000;
-    private int recordCount; //startRecord + currentPageMaxRecords
+    private int recordCount; // startRecord + currentPageMaxRecords
     // XMLStreamWriterHelper.FCS_NS private!
     public static final String CLARIN_FCS_RECORD_SCHEMA = "http://clarin.eu/fcs/resource";
     private static Logger LOG = LoggerFactory.getLogger(KorpSRUSearchResultSet.class);
@@ -76,43 +76,42 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
     /**
      * Constructor.
      *
-     * @param serverConfig 
-     *            the {@link SRUServerConfig} from the aggregator.
-     * @param request 
-     *            the SRU/CQL request {@link SRURequest} from the aggregator.
-     * @param diagnostics
-     *            the SRUDiagnosticList {@link SRUDiagnosticList} from the aggregator.
-     * @param resultSet 
-     * The Query instance with the resultSet. 
-     * @param query 
-     * The original query. 
-     * @param corporaInfo 
-     * The coproraInfo instance with the features and capabilities of each corpus. 
+     * @param serverConfig the {@link SRUServerConfig} from the aggregator.
+     * @param request      the SRU/CQL request {@link SRURequest} from the
+     *                     aggregator.
+     * @param diagnostics  the SRUDiagnosticList {@link SRUDiagnosticList} from the
+     *                     aggregator.
+     * @param resultSet    The Query instance with the resultSet.
+     * @param query        The original query.
+     * @param corporaInfo  The coproraInfo instance with the features and
+     *                     capabilities of each corpus.
      *
      */
-    protected KorpSRUSearchResultSet(SRUServerConfig serverConfig, SRURequest request, SRUDiagnosticList diagnostics, final Query resultSet, final String query, final CorporaInfo corporaInfo) {
+    protected KorpSRUSearchResultSet(SRUServerConfig serverConfig, SRURequest request, SRUDiagnosticList diagnostics,
+            final Query resultSet, final String query, final CorporaInfo corporaInfo) {
         super(diagnostics);
-	this.serverConfig = serverConfig;
-	this.request = request;
-	this.resultSet = resultSet;
-	this.query = query;
-	this.corporaInfo = corporaInfo;
-	
-	startRecord = (request.getStartRecord() < 1) ? 1 : request.getStartRecord();
-	currentRecordCursor = startRecord - 1;
-	maximumRecords = startRecord - 1 + request.getMaximumRecords();
-	recordCount = request.getMaximumRecords();
+        this.serverConfig = serverConfig;
+        this.request = request;
+        this.resultSet = resultSet;
+        this.query = query;
+        this.corporaInfo = corporaInfo;
+
+        startRecord = (request.getStartRecord() < 1) ? 1 : request.getStartRecord();
+        currentRecordCursor = startRecord - 1;
+        maximumRecords = startRecord - 1 + request.getMaximumRecords();
+        recordCount = request.getMaximumRecords();
     }
 
-    protected KorpSRUSearchResultSet(SRUServerConfig serverConfig, SRUDiagnosticList diagnostics, final Query resultSet, final String query, final CorporaInfo corporaInfo) {
+    protected KorpSRUSearchResultSet(SRUServerConfig serverConfig, SRUDiagnosticList diagnostics, final Query resultSet,
+            final String query, final CorporaInfo corporaInfo) {
         super(diagnostics);
-	this.serverConfig = serverConfig;
-	this.resultSet = resultSet;
-	this.query = query;
-	this.corporaInfo = corporaInfo;
-	this.maximumRecords = 250;
-	this.currentRecordCursor = startRecord - 1;
-	this.recordCount = 250;
+        this.serverConfig = serverConfig;
+        this.resultSet = resultSet;
+        this.query = query;
+        this.corporaInfo = corporaInfo;
+        this.maximumRecords = 250;
+        this.currentRecordCursor = startRecord - 1;
+        this.recordCount = 250;
     }
 
     /**
@@ -124,10 +123,10 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
      *         search engine cannot determine the total number of results
      */
     public int getTotalRecordCount() {
-	if (resultSet != null) {
-	    return resultSet.getHits();
-	}
-	return -1;
+        if (resultSet != null) {
+            return resultSet.getHits();
+        }
+        return -1;
     }
 
     /**
@@ -138,10 +137,10 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
      * @return the number of results or 0 if the query failed
      */
     public int getRecordCount() {
-	if (resultSet != null && resultSet.getHits() > -1) {
-	    return resultSet.getHits() < maximumRecords ? resultSet.getHits() : maximumRecords;
-	}
-	return 0;
+        if (resultSet != null && resultSet.getHits() > -1) {
+            return resultSet.getHits() < maximumRecords ? resultSet.getHits() : maximumRecords;
+        }
+        return 0;
     }
 
     /**
@@ -188,7 +187,8 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
      * @return the record schema identifier
      */
     public String getRecordSchemaIdentifier() {
-	return request.getRecordSchemaIdentifier() != null ? request.getRecordSchemaIdentifier() : CLARIN_FCS_RECORD_SCHEMA;
+        return request.getRecordSchemaIdentifier() != null ? request.getRecordSchemaIdentifier()
+                : CLARIN_FCS_RECORD_SCHEMA;
     }
 
     /**
@@ -205,19 +205,18 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
      * @return <code>true</code> if the new current record is valid;
      *         <code>false</code> if there are no more records
      * @throws SRUException
-     *             if an error occurred while fetching the next record
+     *                      if an error occurred while fetching the next record
      */
     public boolean nextRecord() throws SRUException {
-	if (currentRecordCursor < Math.min(resultSet.getHits(), maximumRecords)) {
-	    currentRecordCursor++;
-	    return true;
-	}
-	return false;
+        if (currentRecordCursor < Math.min(resultSet.getHits(), maximumRecords)) {
+            currentRecordCursor++;
+            return true;
+        }
+        return false;
     }
 
-
     protected int getCurrentRecordCursor() {
-	return currentRecordCursor;
+        return currentRecordCursor;
 
     }
 
@@ -227,11 +226,10 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
      *
      * @return identifier for the record or <code>null</code> if none is
      *         available
-     * @throws NoSuchElementException
-     *             result set is past all records
+     * @throws NoSuchElementException result set is past all records
      */
     public String getRecordIdentifier() {
-	return null;
+        return null;
     }
 
     /**
@@ -242,7 +240,7 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
      * @return a surrogate diagnostic or <code>null</code>
      */
     public SRUDiagnostic getSurrogateDiagnostic() {
-	if ((getRecordSchemaIdentifier() != null) &&
+        if ((getRecordSchemaIdentifier() != null) &&
                 !CLARIN_FCS_RECORD_SCHEMA.equals(getRecordSchemaIdentifier())) {
             return new SRUDiagnostic(
                     SRUConstants.SRU_RECORD_NOT_AVAILABLE_IN_THIS_SCHEMA,
@@ -257,68 +255,67 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
     /**
      * Serialize the current record in the requested format.
      *
-     * @param writer
-     *            the {@link XMLStreamException} instance to be used
-     * @throws XMLStreamException
-     *             an error occurred while serializing the result
-     * @throws NoSuchElementException
-     *             result set past all records
+     * @param writer the {@link XMLStreamException} instance to be used
+     * @throws XMLStreamException     an error occurred while serializing the result
+     * @throws NoSuchElementException result set past all records
      * @see #getRecordSchemaIdentifier()
      */
     @Override
     public void writeRecord(XMLStreamWriter writer)
             throws XMLStreamException {
-        AdvancedDataViewWriter helper =
-                new AdvancedDataViewWriter(AdvancedDataViewWriter.Unit.ITEM);
+        AdvancedDataViewWriter helper = new AdvancedDataViewWriter(AdvancedDataViewWriter.Unit.ITEM);
         URI wordLayerId = URI.create("http://spraakbanken.gu.se/ns/fcs/layer/word");
         URI lemmaLayerId = URI.create("http://spraakbanken.gu.se/ns/fcs/layer/lemma");
         URI posLayerId = URI.create("http://spraakbanken.gu.se/ns/fcs/layer/pos");
 
-	Kwic kwic = resultSet.getKwic().get(currentRecordCursor - startRecord);
-	List<Token> tokens = kwic.getTokens();
-	Match match = kwic.getMatch();
-	String corpus = kwic.getCorpus();
+        Kwic kwic = resultSet.getKwic().get(currentRecordCursor - startRecord);
+        List<Token> tokens = kwic.getTokens();
+        Match match = kwic.getMatch();
+        String corpus = kwic.getCorpus();
 
-	XMLStreamWriterHelper.writeStartResource(writer, corpus + "-" + match.getPosition(), null);
+        XMLStreamWriterHelper.writeStartResource(writer, corpus + "-" + match.getPosition(), null);
         XMLStreamWriterHelper.writeStartResourceFragment(writer, null, null);
 
-	long start = 1;
-	if (match.getStart() != 1) {
+        long start = 1;
+        if (match.getStart() != 1) {
             for (int i = 0; i < match.getStart(); i++) {
-		long end = start + tokens.get(i).getWord().length();
+                long end = start + tokens.get(i).getWord().length();
                 helper.addSpan(wordLayerId, start, end, tokens.get(i).getWord());
-		try {
-		    helper.addSpan(posLayerId, start, end, SUCTranslator.fromSUC(tokens.get(i).getMsd()).get(0));
-		} catch (SRUException se) {}
-		helper.addSpan(lemmaLayerId, start, end, tokens.get(i).getLemma());
+                try {
+                    helper.addSpan(posLayerId, start, end, SUCTranslator.fromSUC(tokens.get(i).getMsd()).get(0));
+                } catch (SRUException se) {
+                }
+                helper.addSpan(lemmaLayerId, start, end, tokens.get(i).getLemma());
                 start = end + 1;
             }
         }
 
         for (int i = match.getStart(); i < match.getEnd(); i++) {
-	    long end = start + tokens.get(i).getWord().length();
+            long end = start + tokens.get(i).getWord().length();
             helper.addSpan(wordLayerId, start, end, tokens.get(i).getWord(), 1);
-	    try {
-		helper.addSpan(posLayerId, start, end, SUCTranslator.fromSUC(tokens.get(i).getMsd()).get(0), 1);
-	    } catch (SRUException se) {}
-	    helper.addSpan(lemmaLayerId, start, end, tokens.get(i).getLemma(), 1);
-	    start = end + 1;
+            try {
+                helper.addSpan(posLayerId, start, end, SUCTranslator.fromSUC(tokens.get(i).getMsd()).get(0), 1);
+            } catch (SRUException se) {
+            }
+            helper.addSpan(lemmaLayerId, start, end, tokens.get(i).getLemma(), 1);
+            start = end + 1;
         }
 
         if (tokens.size() > match.getEnd()) {
             for (int i = match.getEnd(); i < tokens.size(); i++) {
-		long end = start + tokens.get(i).getWord().length();
+                long end = start + tokens.get(i).getWord().length();
                 helper.addSpan(wordLayerId, start, end, tokens.get(i).getWord());
-		try {
-		    helper.addSpan(posLayerId, start, end, SUCTranslator.fromSUC(tokens.get(i).getMsd()).get(0));
-	    } catch (SRUException se) {}
-		helper.addSpan(lemmaLayerId, start, end, tokens.get(i).getLemma());
+                try {
+                    helper.addSpan(posLayerId, start, end, SUCTranslator.fromSUC(tokens.get(i).getMsd()).get(0));
+                } catch (SRUException se) {
+                }
+                helper.addSpan(lemmaLayerId, start, end, tokens.get(i).getLemma());
                 start = end + 1;
             }
         }
 
         helper.writeHitsDataView(writer, wordLayerId);
-	if (request == null || request.isQueryType(Constants.FCS_QUERY_TYPE_FCS)) {
+        if (request == null || request.isQueryType(Constants.FCS_QUERY_TYPE_FCS)) {
             helper.writeAdvancedDataView(writer);
         }
 
@@ -332,25 +329,23 @@ public class KorpSRUSearchResultSet extends SRUSearchResultSet {
      * The default implementation returns <code>false</code>.
      *
      * @return <code>true</code> if the record has extra record data
-     * @throws NoSuchElementException
-     *             result set is already advanced past all records
+     * @throws NoSuchElementException result set is already advanced past all
+     *                                records
      * @see #writeExtraResponseData(XMLStreamWriter)
      */
     public boolean hasExtraRecordData() {
         return false;
     }
 
-
     /**
      * Serialize extra record data for the current record. A no-op default
      * implementation is provided for convince.
      *
-     * @param writer
-     *            the {@link XMLStreamException} instance to be used
-     * @throws XMLStreamException
-     *             an error occurred while serializing the result extra data
-     * @throws NoSuchElementException
-     *             result set past already advanced past all records
+     * @param writer the {@link XMLStreamException} instance to be used
+     * @throws XMLStreamException     an error occurred while serializing the result
+     *                                extra data
+     * @throws NoSuchElementException result set past already advanced past all
+     *                                records
      * @see #hasExtraRecordData()
      */
     public void writeExtraRecordData(XMLStreamWriter writer)
