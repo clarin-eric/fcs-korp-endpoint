@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -23,20 +24,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 	"corpora",
-	"time",
+	"total_size",
 	"total_sentences",
-	"total_size"
+	"time"
 })
 public class CorporaInfo {
 
     @JsonProperty("corpora")
     private Map<String, Corpus> corpora = new HashMap<String, Corpus>();
-    @JsonProperty("time")
-    private Double time;
+    @JsonProperty("total_size")
+    private BigInteger totalSize;
     @JsonProperty("total_sentences")
     private Integer totalSentences;
-    @JsonProperty("total_size")
-    private Integer totalSize;
+    @JsonProperty("time")
+    private Double time;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -120,7 +121,7 @@ public class CorporaInfo {
      * @return The totalSize
      */
     @JsonProperty("total_size")
-    public Integer getTotalSize() {
+    public BigInteger getTotalSize() {
 	return totalSize;
     }
 
@@ -129,7 +130,7 @@ public class CorporaInfo {
      * @param totalSize The total_size
      */
     @JsonProperty("total_size")
-    public void setTotalSize(Integer totalSize) {
+    public void setTotalSize(BigInteger totalSize) {
 	this.totalSize = totalSize;
     }
 
@@ -153,8 +154,11 @@ public class CorporaInfo {
         ObjectMapper mapper = new ObjectMapper();
 
 	CorporaInfo ci = null;
-	final String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
-	final String queryString = "command=info&corpus=";
+	final String wsStringv6 ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
+	final String queryStringv6 = "command=info&corpus=";
+	// v8
+	final String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v8/corpus_info";
+	final String queryString = "?corpus=";
 	//"ROMI,PAROLE";
 	final String corporaValues = getCorpusParameterValues(corpora);
         try {

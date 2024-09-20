@@ -2,6 +2,7 @@ package se.gu.spraakbanken.fcs.endpoint.korp.data.json.pojo;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class CorporaInfoTest {
 
 	ci.setTime(new Double("0.000441"));
 	ci.setTotalSentences(new Integer("2145718"));
-	ci.setTotalSize(new Integer("30911156"));
+	ci.setTotalSize(new BigInteger("30911156"));
 
         String s = null;
         try {
@@ -179,8 +180,10 @@ public class CorporaInfoTest {
 
 	CorporaInfo ci4 = null;
 	String roundTripString = "";
-	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
-	String queryString = "indent=4&command=info&corpus=ROMI,PAROLE";
+	String wsStringv6 ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
+	String queryStringv6 = "indent=4&command=info&corpus=ROMI,PAROLE";
+	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v8/corpus_info?";
+	String queryString = "indent=4&corpus=ROMI,PAROLE";
 
         try {
 	    URL korp = new URL(wsString + queryString);

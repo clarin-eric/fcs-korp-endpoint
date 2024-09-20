@@ -85,9 +85,11 @@ public class CountLemgramsTest {
 
 	CountLemgrams cl4 = null;
 	String roundTripString = "";
-	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
-	String queryString = "indent=4&command=lemgram_count&lemgram=ge..vb.1&lemgram=hitta..vb.1&corpus=ROMI&corpus=SUC2";
-
+	String wsStringv6 ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
+	String queryStringv6 = "indent=4&command=lemgram_count&lemgram=ge..vb.1&lemgram=hitta..vb.1&corpus=ROMI&corpus=SUC2";
+	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v8/lemgram_count?";
+	String queryString = "indent=4&lemgram=ge..vb.1&lemgram=hitta..vb.1&corpus=ROMI&corpus=SUC2";
+	
         try {
 	    URL korp = new URL(wsString + queryString);
 

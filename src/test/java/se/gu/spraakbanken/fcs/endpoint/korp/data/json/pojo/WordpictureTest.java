@@ -99,8 +99,10 @@ public class WordpictureTest {
 
 	Wordpicture wp4 = null;
 	String roundTripString = "";
-	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
-	String queryString = "command=relations&word=ge..vb.1&type=lemgram&corpus=ROMI";
+	String wsStringv6 ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
+	String queryStringv6 = "command=relations&word=ge..vb.1&type=lemgram&corpus=ROMI";
+	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v8/relations?";
+	String queryString = "word=ge..vb.1&type=lemgram&corpus=ROMI";
 
         try {
 	    URL korp = new URL(wsString + queryString);

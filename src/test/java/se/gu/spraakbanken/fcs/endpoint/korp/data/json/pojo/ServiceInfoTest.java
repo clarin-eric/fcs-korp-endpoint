@@ -86,8 +86,10 @@ public class ServiceInfoTest {
 
 	ServiceInfo si4 = null;
 	String roundTripString = "";
-	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
-	String queryString = "indent=4&command=info";
+	String wsStringv6 ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
+	String queryStringv6 = "indent=4&command=info";
+	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v8/";
+	String queryString = "?indent=4";
 
         try {
 	    URL korp = new URL(wsString + queryString);

@@ -99,9 +99,12 @@ public class CountCQPTest {
 
 	CountCQP cl4 = null;
 	String roundTripString = "";
-	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
-	String queryString = "indent=4&command=count&cqp=%5Bword=%22givande%22%5D&corpus=ROMI&groupby=word&ignore_case=word";
-//{"corpora":{},"time":3.287792205810547E-4,"ERROR":{"type":"KeyError","value":"'Key is required: groupby'"}}
+	String wsStringv6 ="https://ws.spraakbanken.gu.se/ws/korp/v6/?";
+	String queryStringv6 = "indent=4&command=count&cqp=%5Bword=%22givande%22%5D&corpus=ROMI&groupby=word&ignore_case=word";
+	String wsString ="https://ws.spraakbanken.gu.se/ws/korp/v8/count?";
+	String queryString = "indent=4&cqp=%5Bword=%22givande%22%5D&corpus=ROMI&group_by=word&ignore_case=word";
+// v6: {"corpora":{},"time":3.287792205810547E-4,"ERROR":{"type":"KeyError","value":"'Key is required: groupby'"}}
+// v8: {"corpora":{},"time":3.287792205810547E-4,"ERROR":{"type":"KeyError","value":"'Key is required: group_by'"}}
 
         try {
 	    URL korp = new URL(wsString + queryString);
