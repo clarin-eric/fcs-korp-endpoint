@@ -3,6 +3,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# Projectile project file
+.projectile
+
 # Package Files #
 *.jar
 *.war
